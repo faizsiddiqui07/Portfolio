@@ -8,13 +8,16 @@ const sendEmail = require('../utils/sendEmail');
 
 const register = async (req, res) => {
     try {
+
+        const { fullName, email, phone, aboutMe, password, portfolioURL, githubURL, instagramURL, linkedInURL, facebookURL } = req.body;
+        const { avatar, resume } = req.files;
+        
+
         if (!req.files || !req.files.avatar || !req.files.resume) {
             return res.status(400).json({
                 message: "Avatar and Resume are required!"
             });
         }
-
-        const { avatar, resume } = req.files;
 
         let cloudinaryResponseForAvatar;
         try {
@@ -45,7 +48,6 @@ const register = async (req, res) => {
             });
         }
 
-        const { fullName, email, phone, aboutMe, password, portfolioURL, githubURL, instagramURL, linkedInURL, facebookURL } = req.body;
 
         const existUser = await User.findOne({ email });
         if (existUser) {
