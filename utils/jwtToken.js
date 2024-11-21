@@ -8,9 +8,11 @@ const generateToken = (user, message, statusCode, res) => {
             .cookie("token", token, {
                 expires: new Date(Date.now() + parseInt(process.env.COOKIE_EXPIRES) * 24 * 60 * 60 * 1000),
                 httpOnly: true,
+                sameSite: "None",
+                secure: true
             })
             .json({
-                success: true, 
+                success: true,
                 error: false,
                 message,
                 user,

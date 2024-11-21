@@ -11,7 +11,7 @@ const register = async (req, res) => {
 
         const { fullName, email, phone, aboutMe, password, portfolioURL, githubURL, instagramURL, linkedInURL, facebookURL } = req.body;
         const { avatar, resume } = req.files;
-        
+
 
         if (!req.files || !req.files.avatar || !req.files.resume) {
             return res.status(400).json({
@@ -90,7 +90,7 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-    
+
     try {
         const { email, password } = req.body;
 
@@ -127,7 +127,12 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
     try {
-        res.clearCookie("token", { httpOnly: true });
+        res.clearCookie("token", {
+            httpOnly: true,
+            expires: new Date(Date.now()),
+            sameSite:"None",
+            secure:true
+        });
 
         return res.status(200).json({
             success: true,
@@ -169,10 +174,10 @@ const getUser = async (req, res) => {
 };
 
 const updateProfile = async (req, res) => {
-    
+
     try {
-        const userId = req.user._id;        
-        
+        const userId = req.user._id;
+
 
         const newUserData = {
             fullName: req.body.fullName,
@@ -352,11 +357,11 @@ const forgotPassword = async (req, res) => {
 };
 
 const resetPassword = async (req, res) => {
-    
+
     try {
         const { token } = req.params;
-        console.log("token",token);
-        
+        console.log("token", token);
+
         const resetPasswordToken = crypto.createHash("sha256").update(token).digest("hex");
 
         const user = await User.findOne({
